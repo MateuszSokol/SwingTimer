@@ -34,6 +34,7 @@ public class CountdownTimer
                 else
                 {
                     timer.cancel();
+                    new FullScreenFlasher();
                 }
             }
         },0,TIMER_DELAY);
@@ -48,4 +49,5 @@ public class CountdownTimer
 
         return String.format("%02d:%02d",min,sec);
     }
+
 }
