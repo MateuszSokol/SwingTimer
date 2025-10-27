@@ -12,18 +12,20 @@ public class StartingScreen extends JFrame
 {
    private final JPanel mainPanel = new JPanel();
    private final Font myFont = new Font("Roboto",Font.BOLD,20);
+   private static StartingScreen INSTANCE;
 
-   public JButton launchTimerButton = new JButton("Launch");
+   public JButton launchTimerButton = new JButton("Włącz");
    public JTextField hoursTextField = new JTextField();
    public JTextField minutesTextField = new JTextField();
 
    CardLayout cardLayout = new CardLayout();
-   JPanel currentPanel = new JPanel(cardLayout);
+   public JPanel currentPanel = new JPanel(cardLayout);
 
-    public StartingScreen()
+    private StartingScreen()
     {
         initializeCoreFrameProperties();
         currentPanel.add(mainPanel,"configurePanel");
+        minutesTextField.setText("15");
 
         mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.Y_AXIS));
         addComponentsToMainPanel();
@@ -32,13 +34,21 @@ public class StartingScreen extends JFrame
         setUpButtonListener();
         pack();
 
+    }
+    public static StartingScreen getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new StartingScreen();
+        }
 
+        return INSTANCE;
+    }
+    public static void setStartingScreenInstanceToNull()
+    {
+        INSTANCE = null;
     }
 
     public void initializeCoreFrameProperties()
     {
-
-
         this.setPreferredSize(new Dimension(200,170));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -51,8 +61,8 @@ public class StartingScreen extends JFrame
     }
     public void addComponentsToMainPanel()
     {
-        JLabel hoursLabel = new JLabel("Hours");
-        JLabel minutesLabel = new JLabel("Minutes");
+        JLabel hoursLabel = new JLabel("Godziny");
+        JLabel minutesLabel = new JLabel("Minuty");
 
         hoursTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
         minutesTextField.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -95,6 +105,7 @@ public class StartingScreen extends JFrame
             public void actionPerformed(ActionEvent e) {
 
                 checkIfDataIsProvided();
+                changeShapeOFFrameForPomodoroTimer();
                 int hoursToMinutes = Integer.parseInt(hoursTextField.getText())*60;
                 int totalTime = hoursToMinutes+Integer.parseInt(minutesTextField.getText());
                 CountdownTimer countdownTimer = new CountdownTimer(totalTime);
@@ -106,5 +117,13 @@ public class StartingScreen extends JFrame
         launchTimerButton.addActionListener(buttonListener);
     }
 
+    public void changeShapeOFFrameForPomodoroTimer()
+    {
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize(100,70);
+        this.setResizable(false);
+        this.setLocation(d.width - (this.getWidth()),0);
+        this.setAlwaysOnTop(true);
+    }
 
 }
